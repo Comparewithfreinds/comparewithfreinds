@@ -20,6 +20,7 @@
                 <li><a href="#achievements">Achievements</a></li>
                 <li><a href="#health">Health & Energy</a></li>
                 <li><a href="#habits">Habit Building</a></li>
+                <li><a href="#analytics">Analytics</a></li>
             </ul>
         </nav>
     </header>
@@ -57,6 +58,7 @@
             </ul>
             <input type="text" id="new-quest" placeholder="New Quest">
             <button onclick="addQuest()">Add Quest</button>
+            <p id="quest-error" class="error-message"></p>
         </section>
 
         <section id="daily">
@@ -66,6 +68,7 @@
             </ul>
             <input type="text" id="new-task" placeholder="New Task">
             <button onclick="addDailyTask()">Add Task</button>
+            <p id="task-error" class="error-message"></p>
         </section>
 
         <section id="inventory">
@@ -95,6 +98,14 @@
             </ul>
             <input type="text" id="new-habit" placeholder="New Habit">
             <button onclick="addHabit()">Add Habit</button>
+            <p id="habit-error" class="error-message"></p>
+        </section>
+
+        <section id="analytics">
+            <h2>Analytics</h2>
+            <p>Track your progress and productivity.</p>
+            <div class="widget" id="task-completion-rate-widget">Task Completion Rate: <span id="task-completion-rate">0%</span></div>
+            <div class="widget" id="habit-streak-widget">Longest Habit Streak: <span id="longest-habit-streak">0</span></div>
         </section>
     </main>
 
