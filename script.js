@@ -39,17 +39,21 @@ function updateUI(state) {
     updateInventory(state.inventory);
     updateAchievements(state.achievements);
     updateHabits(state.habits);
+    updateAnalytics(state);
 }
 
 function addQuest() {
     let quest = document.getElementById('new-quest').value;
-    if (quest) {
-        let state = JSON.parse(localStorage.getItem('gameState')) || initialState;
-        state.quests.push({ name: quest, completed: false });
-        saveState(state);
-        updateUI(state);
-        document.getElementById('new-quest').value = '';
+    if (quest.trim() === '') {
+        document.getElementById('quest-error').textContent = 'Quest cannot be empty.';
+        return;
     }
+    let state = JSON.parse(localStorage.getItem('gameState')) || initialState;
+    state.quests.push({ name: quest, completed: false });
+    saveState(state);
+    updateUI(state);
+    document.getElementById('new-quest').value = '';
+    document.getElementById('quest-error').textContent = '';
 }
 
 function updateQuestList(quests) {
@@ -76,19 +80,24 @@ function toggleQuestCompletion(index) {
     } else {
         state.xp -= 10;
     }
+    checkLevelUp(state);
+    updateHealthAndEnergy(state);
     saveState(state);
     updateUI(state);
 }
 
 function addDailyTask() {
     let task = document.getElementById('new-task').value;
-    if (task) {
-        let state = JSON.parse(localStorage.getItem('gameState')) || initialState;
-        state.dailyTasks.push({ name: task, completed: false });
-        saveState(state);
-        updateUI(state);
-        document.getElementById('new-task').value = '';
+    if (task.trim() === '') {
+        document.getElementById('task-error').textContent = 'Task cannot be empty.';
+        return;
     }
+    let state = JSON.parse(localStorage.getItem('gameState')) || initialState;
+    state.dailyTasks.push({ name: task, completed: false });
+    saveState(state);
+    updateUI(state);
+    document.getElementById('new-task').value = '';
+    document.getElementById('task-error').textContent = '';
 }
 
 function updateDailyTasks(tasks) {
@@ -117,19 +126,24 @@ function toggleTaskCompletion(index) {
         state.xp -= 5;
         state.energy += 5;
     }
+    checkLevelUp(state);
+    updateHealthAndEnergy(state);
     saveState(state);
     updateUI(state);
 }
 
 function addHabit() {
     let habit = document.getElementById('new-habit').value;
-    if (habit) {
-        let state = JSON.parse(localStorage.getItem('gameState')) || initialState;
-        state.habits.push({ name: habit, streak: 0 });
-        saveState(state);
-        updateUI(state);
-        document.getElementById('new-habit').value = '';
+    if (habit.trim() === '') {
+        document.getElementById('habit-error').textContent = 'Habit cannot be empty.';
+        return;
     }
+    let state = JSON.parse(localStorage.getItem('gameState')) || initialState;
+    state.habits.push({ name: habit, streak: 0 });
+    saveState(state);
+    updateUI(state);
+    document.getElementById('new-habit').value = '';
+    document.getElementById('habit-error').textContent = '';
 }
 
 function updateHabits(habits) {
@@ -149,6 +163,7 @@ function incrementHabitStreak(index) {
     let state = JSON.parse(localStorage.getItem('gameState')) || initialState;
     state.habits[index].streak += 1;
     state.xp += 2;
+    checkLevelUp(state);
     saveState(state);
     updateUI(state);
 }
@@ -179,6 +194,7 @@ function checkLevelUp(state) {
     if (state.xp >= levelUpThreshold) {
         state.level += 1;
         state.xp -= levelUpThreshold;
+        alert("Congratulations! You've leveled up to level " + state.level);
     }
 }
 
@@ -187,16 +203,10 @@ function updateHealthAndEnergy(state) {
     if (state.energy <= 0) {
         state.health -= 10;
         state.energy = 100;
+        alert("Your energy has depleted. You lose 10 health points.");
     }
 
     if (state.health <= 0) {
         alert("Game Over! Your character has exhausted all health.");
         resetGame();
     }
-}
-
-// Reset Game
-function resetGame() {
-    localStorage.removeItem('gameState');
-    initialize();
-}
