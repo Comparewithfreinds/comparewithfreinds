@@ -210,3 +210,21 @@ function updateHealthAndEnergy(state) {
         alert("Game Over! Your character has exhausted all health.");
         resetGame();
     }
+}
+
+// Reset Game
+function resetGame() {
+    localStorage.removeItem('gameState');
+    initialize();
+}
+
+// Analytics
+function updateAnalytics(state) {
+    let completedTasks = state.dailyTasks.filter(task => task.completed).length;
+    let totalTasks = state.dailyTasks.length;
+    let taskCompletionRate = totalTasks ? (completedTasks / totalTasks) * 100 : 0;
+    document.getElementById('task-completion-rate').textContent = taskCompletionRate.toFixed(2) + '%';
+
+    let longestHabitStreak = Math.max(...state.habits.map(habit => habit.streak), 0);
+    document.getElementById('longest-habit-streak').textContent = longestHabitStreak;
+}
